@@ -9,7 +9,7 @@ node_js:
   - '5'
   - '4'
 after_script:
-  - npm run coveralls
+  - npm run codecov
 after_success:
   - 'curl -Lo travis_after_all.py https://git.io/travis_after_all'
   - python travis_after_all.py
