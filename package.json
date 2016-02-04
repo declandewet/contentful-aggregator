@@ -49,9 +49,9 @@
   },
   "scripts": {
     "build": "babel src -d lib",
-    "coverage": "nyc report",
+    "coverage": "nyc report --reporter=lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "test": "standard && nyc --reporter=lcov babel-tape-runner test/**/*.js | tap-spec"
+    "test": "standard && nyc babel-tape-runner test/**/*.js | tap-spec"
   }
 }
