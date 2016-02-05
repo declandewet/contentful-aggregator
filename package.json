@@ -34,6 +34,10 @@
     "standard": "^6.0.4",
     "tap-spec": "^4.1.1"
   },
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
+  },
   "homepage": "https://github.com/declandewet/contentful-aggregator",
   "keywords": [
     "aggregate",

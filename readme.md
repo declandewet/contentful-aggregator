@@ -23,14 +23,16 @@
 # Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+
 - [Installation](#installation)
-    - [Requirements](#requirements)
-    - [Instructions](#instructions)
+  - [Requirements](#requirements)
+  - [Instructions](#instructions)
 - [Required Knowledge](#required-knowledge)
-    - [A Short Primer on Futures](#a-short-primer-on-futures)
+  - [A Short Primer on Futures](#a-short-primer-on-futures)
 - [Usage](#usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -173,3 +175,28 @@ const client = ca('apiToken')
 const myPortfolioSpace = client('portfolio site space id')
 const myBlogSpace = client('blog site space id')
 ```
+
+
+
+This will return an instance of the `Space` class.
+
+
+
+## API
+
+### Space()
+
+#### Space.fetchSpace()
+
+#### Space.fetchLocales()
+
+#### Space.fetchLocaleCodes()
+
+#### Space.fetchContentType(<id>)
+
+#### Space.fetchEntries(<opts>)
+
+### Entry()
+
+#### Entry.path()
+
