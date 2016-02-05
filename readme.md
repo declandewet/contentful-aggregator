@@ -23,16 +23,14 @@
 # Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-
 - [Installation](#installation)
-  - [Requirements](#requirements)
-  - [Instructions](#instructions)
+    - [Requirements](#requirements)
+    - [Instructions](#instructions)
 - [Required Knowledge](#required-knowledge)
-  - [A Short Primer on Futures](#a-short-primer-on-futures)
+    - [A Short Primer on Futures](#a-short-primer-on-futures)
 - [Usage](#usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
