@@ -9,6 +9,9 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    },
+    "ghooks": {
+      "pre-commit": "doctoc readme.md --notitle --maxlevel 4"
     }
   },
   "dependencies": {
@@ -24,10 +27,16 @@
     "blue-tape": "^0.2.0",
     "codecov": "^1.0.1",
     "cz-conventional-changelog": "^1.1.5",
+    "doctoc": "^1.0.0",
+    "ghooks": "^1.0.3",
     "nyc": "^5.5.0",
     "semantic-release": "^4.3.5",
     "standard": "^6.0.4",
     "tap-spec": "^4.1.1"
+  },
+  "engines": {
+    "node": ">=4.0.0",
+    "npm": ">=3.0.0"
   },
   "homepage": "https://github.com/declandewet/contentful-aggregator",
   "keywords": [
@@ -49,8 +58,8 @@
   },
   "scripts": {
     "build": "babel src -d lib",
-    "coverage": "nyc report",
     "codecov": "nyc report --reporter=lcov && codecov",
+    "coverage": "nyc report",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "test": "standard && nyc babel-tape-runner test/**/*.js | tap-spec"
   }
