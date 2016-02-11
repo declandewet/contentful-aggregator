@@ -2,13 +2,13 @@
 
 
 
-> Configures content type entries for use in static site generators. Supports linked entries and localization.
+> Configures content type entries for use in static site generators. Supports linked entries and localization. Built on top of [Contentful.js](https://github.com/contentful/contentful.js)
 > 
-> **Please Note** this project is in early stages and follows [Readme-Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) practices, so not all the functionality below works yet and the documentation is subject to change at a rapid rate. Consider this project as *unstable* for now.
+> ​:warning: **Please Note**: this project is in early stages and follows [Readme-Driven Development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) practices, so beware - not all the functionality below works just yet and the documentation is subject to change at a rapid rate. Consider this project as *unstable* for now.
 
 
 
-# Project Status
+# :battery: Status
 
 [![GitHub license](https://img.shields.io/github/license/declandewet/contentful-aggregator.svg?style=flat-square)](https://github.com/declandewet/contentful-aggregator/blob/master/license.md)[![GitHub release](https://img.shields.io/github/release/declandewet/contentful-aggregator.svg?style=flat-square)](https://github.com/declandewet/contentful-aggregator/releases)[![npm](https://img.shields.io/npm/v/contentful-aggregator.svg?style=flat-square)](http://npmjs.org/package/contentful-aggregator)[![npm](https://img.shields.io/npm/dt/contentful-aggregator.svg?style=flat-square)](http://npmjs.org/package/contentful-aggregator)[![node](https://img.shields.io/node/v/contentful-aggregator.svg?style=flat-square)]()
 
@@ -18,33 +18,48 @@
 
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com/)[![greenkeeper](https://img.shields.io/badge/greenkeeper-enabled-brightgreen.svg?style=flat-square)](http://greenkeeper.io/)
 
+> ​:point_up: Please click on any of these to see more information/context
 
 
-# Table of Contents
+
+# :book: Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-
-- [Installation](#installation)
-  - [Requirements](#requirements)
-  - [Instructions](#instructions)
-- [Required Knowledge](#required-knowledge)
-  - [A Short Primer on Futures](#a-short-primer-on-futures)
-- [Usage](#usage)
+- [:arrow_double_down: Installation](#arrow_double_down-installation)
+    - [Requirements](#requirements)
+    - [Instructions](#instructions)
+- [:books: Usage](#books-usage)
+  - [API](#api)
+    - [Util](#util)
+      - [util.pluralize(<str>)](#utilpluralizestr)
+      - [util.underscored(<str>)](#utilunderscoredstr)
+      - [util.slugify(<str>)](#utilslugifystr)
+    - [Space()](#space)
+      - [Space::getClient()](#spacegetclient)
+      - [Space::fetchInfo()](#spacefetchinfo)
+      - [Space::fetchLocales()](#spacefetchlocales)
+      - [Space::fetchLocaleCodes()](#spacefetchlocalecodes)
+      - [Space::fetchContentType(<id>)](#spacefetchcontenttypeid)
+    - [ContentType()](#contenttype)
+      - [ContentType::fetchEntries(<opts>)](#contenttypefetchentriesopts)
+      - [ContentType::path(<pathValue>)](#contenttypepathpathvalue)
+    - [Entry(<opts>)](#entryopts)
+- [:mortar_board: Required Knowledge](#mortar_board-required-knowledge)
+    - [A Short Primer on Futures](#a-short-primer-on-futures)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 
-# Installation
+# :arrow_double_down: Installation
 
 ### Requirements
 
 - [Node.js](https://nodejs.org/en/download/) v4.0.0 or higher
-- NPM (v3.0.0+ recommended) (this comes with Node.js)
+- NPM (v3.0.0+ highly recommended) (this comes with Node.js)
 
 
 
@@ -58,7 +73,227 @@ $ npm install contentful-aggregator --save
 
 
 
-# Required Knowledge
+# :books: Usage
+
+`contentful-aggregator` uses a Future-based syntax. [If you are not familiar with Futures, please read this short primer.](#a-short-primer-on-futures)
+
+
+
+`contentful-aggregator` exposes a single curried function that receives two arguments. The first argument is your Contentful API Key, and the second argument is the ID of the space you want to obtain your data from.
+
+``` javascript
+import ca from 'contentful-aggregator'
+
+const space = ca('apiToken', 'space')
+```
+
+
+
+Since this function is curried, you may omit the second argument. Doing so will return a function that has the apiToken, but expects the space ID.
+
+``` javascript
+const client = ca('apiToken')
+const myPortfolioSpace = client('portfolio site space id')
+const myBlogSpace = client('blog site space id')
+```
+
+
+
+This will return an instance of the `Space` class.
+
+
+
+## API
+
+### Util
+
+``` javascript
+import util from 'contentful-aggregator/util'
+```
+
+
+
+#### util.pluralize(<str>)
+
+###### pluralize :: String -> String
+
+Returns the plural form of the String `str`
+
+``` javascript
+util.pluralize('octopus') // -> 'octopi'
+util.pluralize('book') // -> 'books'
+```
+
+
+
+#### util.underscored(<str>)
+
+###### underscored :: String -> String
+
+Returns the underscored form of the String `str`
+
+``` javascript
+util.underscored('foo bar') // -> 'foo_bar'
+util.underscored('fooBar') // -> 'foo_bar'
+```
+
+
+
+#### util.slugify(<str>)
+
+###### slugify :: String -> String
+
+Returns the slugified form of the String `str`
+
+``` javascript
+util.slugify('foo bar') // -> 'foo-bar'
+util.slugify('foo_bar') // -> 'foo-bar
+```
+
+
+
+---
+
+### Space()
+
+An instance of this class is returned once the `contentful-aggregator` module is fully setup.
+
+
+
+#### Space::getClient()
+
+###### getClient :: -> Object
+
+Returns a direct reference to the [Contentful.js](https://github.com/contentful/contentful.js) client, in case you need it to do anything that `contentful-aggregator` doesn't already offer out of the box (psst... send us a pull request! :smile:)
+
+``` javascript
+const client = space.getClient()
+
+client.entries(...)... 
+client.contentType(...)... // etc
+```
+
+
+
+#### Space::fetchInfo()
+
+###### fetchInfo :: -> Future Object
+
+Asynchronously fetches information about the current space from Contentful's content delivery API.
+
+``` javascript
+space.fetchInfo().fork(null, (info) => {
+  return info === {
+    sys: {
+      type: 'Space',
+        id: 'cfexampleapi'
+    },
+    name: 'Contentful Example API',
+    locales: [
+      { code: 'en-US', name: 'English' },
+      { code: 'tlh', name: 'Klingon' }
+   	]
+  }
+})
+```
+
+
+
+#### Space::fetchLocales()
+
+###### fetchLocales :: -> Future [Object]
+
+Asynchronously fetches an array of the locales you have configured for your space on Contentful.
+
+``` javascript
+space.fetchLocales().fork(null, (locales) => {
+  return locales === [
+  	{ code: 'en-US', name: 'English' },
+    { code: 'tlh', name: 'Klingon' }
+  ]
+})
+```
+
+
+
+#### Space::fetchLocaleCodes()
+
+###### fetchLocaleCodes :: -> Future [String]
+
+Asynchronously fetches an array of the locale codes for every locale you have configured for your space on Contentful.
+
+``` javascript
+space.fetchLocaleCodes().fork(null, (localeCodes) => {
+  return localeCodes === ['en-US', 'tlh']
+}
+```
+
+
+
+#### Space::fetchContentType(<id>)
+
+###### fetchContentType :: String -> [ContentType]
+
+Asynchronously fetches information about a single content type with an `id` property that matches `id` from Contentful. Resolves to an instance of [ContentType](#ContentType)
+
+``` javascript
+space.fetchContentType('content type id').map((contentType) => {
+  // contentType === instanceof ContentType
+  contentType.setName('blog_posts')
+})
+```
+
+
+
+---
+
+### ContentType()
+
+
+
+#### ContentType::fetchEntries(<opts>)
+
+###### fetchEntries :: Object -> Future [Entry]
+
+Asynchronously fetch all entries that match [search parameter opts]() and belong to this ContentType. Resolves to an array of [Entry]() instances
+
+``` javascript
+blogPosts.fetchEntries({
+  include: 3,
+  'fields.title[exists]': true
+}).fork(posts => {
+  console.log(posts[0].path())
+})
+```
+
+
+
+#### ContentType::path(<pathValue>)
+
+###### setEntryPath :: (Object -> any) -> [Entry] -> [Entry] 
+
+Convenience method for setting the `path()` method on each entry that belongs to this ContentType. Returns an array of entries with the newly added/updated `path()` method.
+
+``` javascript
+blogPosts.fetchEntries()
+  .map(blogPosts.path(post => `posts/${post.name}.html`))
+```
+
+
+
+
+
+---
+
+### Entry(<opts>)
+
+[WIP]
+
+
+
+---
+
+# :mortar_board: Required Knowledge
 
 
 
@@ -105,7 +340,7 @@ const fetchJSON = fetch.chain(parseJSON)
 We can use `.map()` similarly to unwrap the value and run any function on it. So, if we wanted to only get the `items` property of the JSON response, that would look like this:
 
 ``` javascript
-// fetchItems :: Future Object -> Future []
+// fetchItems :: Future Object -> Future [Object]
 const fetchItems = fetchJSON.map(json => json.items)
 ```
 
@@ -137,7 +372,7 @@ const fetchUrlFromUrl = fetchJSON.map(json => json.url).chain(fetch)
 
 
 
-The biggest strength, especially in the context of `contentful-aggregator`, is the ability for Futures to be easily cached. This means you can take a future that executes an HTTP request, but wrap it in another Future that will return any subsequent calls to `.fork()` from a cache:
+The biggest strength, especially in the context of `contentful-aggregator`, is the ability for Futures to be easily cached. This means you can take a Future that executes an HTTP request, but wrap it in another Future that will return any subsequent calls to `.fork()` from a cache:
 
 ``` javascript
 // getCachedNewItems :: Future [Object] -> Future [Object]
@@ -153,50 +388,4 @@ getCachedNewItems('/products.json').fork(console.error, console.log)
 
 
 Futures in `contentful-aggregator` are [based on the Ramda-Fantasy library](https://github.com/ramda/ramda-fantasy/blob/master/docs/Future.md) which include other methods like `ap`, `of`, `chainReject`, `biMap`, and `reject`.
-
-
-
-# Usage
-
-`contentful-aggregator` exposes a single curried function that receives two arguments. The first argument is your Contentful API Key, and the second argument is the ID of the space you want to obtain your data from.
-
-``` javascript
-import ca from 'contentful-aggregator'
-
-const space = ca('apiToken', 'space')
-```
-
-
-
-Since this function is curried, you may omit the second argument. Doing so will return a function that has the apiToken, but expects the space ID.
-
-``` javascript
-const client = ca('apiToken')
-const myPortfolioSpace = client('portfolio site space id')
-const myBlogSpace = client('blog site space id')
-```
-
-
-
-This will return an instance of the `Space` class.
-
-
-
-## API
-
-### Space()
-
-#### Space.fetchSpace()
-
-#### Space.fetchLocales()
-
-#### Space.fetchLocaleCodes()
-
-#### Space.fetchContentType(<id>)
-
-#### Space.fetchEntries(<opts>)
-
-### Entry()
-
-#### Entry.path()
 

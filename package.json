@@ -11,7 +11,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "doctoc readme.md --notitle"
+      "pre-commit": "doctoc readme.md --notitle --maxlevel 4"
     }
   },
   "dependencies": {
