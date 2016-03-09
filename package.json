@@ -15,7 +15,7 @@
     }
   },
   "dependencies": {
-    "common-tags": "0.0.1",
+    "common-tags": "0.0.3",
     "contentful": "^2.1.2",
     "ramda": "^0.19.1",
     "ramda-fantasy": "^0.4.1"
