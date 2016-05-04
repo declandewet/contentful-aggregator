@@ -31,7 +31,7 @@
     "ghooks": "^1.0.3",
     "nyc": "^6.0.0",
     "semantic-release": "^4.3.5",
-    "standard": "^6.0.4",
+    "standard": "^7.0.1",
     "tap-spec": "^4.1.1"
   },
   "engines": {
