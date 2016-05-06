@@ -18,7 +18,7 @@
     "common-tags": "0.0.3",
     "contentful": "^3.0.8",
     "ramda": "^0.21.0",
-    "ramda-fantasy": "^0.4.1"
+    "ramda-fantasy": "^0.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
